@@ -37,9 +37,10 @@ def preprocess_image(image_path: str, max_side: int = 1600, min_side: int = 900)
         image = cv2.resize(image, (round(width * scale), round(height * scale)), interpolation=interpolation)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     denoised = cv2.bilateralFilter(gray, 7, 50, 50)
-    binary = cv2.adaptiveThreshold(
-        denoised, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 11
-    )
+    # Otsu is the ProductLabel-OCR baseline. It gives PaddleOCR a clean,
+    # reproducible input while the denoised grayscale image remains available
+    # for engines that perform their own binarization.
+    _, binary = cv2.threshold(denoised, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return PreprocessedImage(original=image, gray=denoised, binary=binary)
 
 
