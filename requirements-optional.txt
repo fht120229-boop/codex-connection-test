@@ -1,0 +1,8 @@
+# Enable the YOLO -> EasyOCR path when a trained text detector is available.
+ultralytics>=8.2
+easyocr>=1.7
+# Enable the PaddleOCR engine.
+paddlepaddle>=2.6
+paddleocr>=2.7
+# Optional QR and 1D barcode coverage.
+zxing-cpp>=2.2
