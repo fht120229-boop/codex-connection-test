@@ -4,6 +4,7 @@ from typing import Optional
 
 from .localize import YoloEasyOCR
 from .paddle_engine import PaddleOCREngine
+from .fields import extract_structured_fields
 from .preprocess import preprocess_image
 from .qr_decoder import decode_codes, explicit_chemistry_from_text
 
@@ -26,6 +27,7 @@ class BatteryOCRPipeline:
         chemistries = sorted({item["chemistry"] for item in evidence})
         return {
             "ocr_text": text,
+            "fields": extract_structured_fields(text),
             "regions": localized,
             "codes": codes,
             "ocr_engines": sorted({item.get("engine", "easyocr") for item in text_items}),
