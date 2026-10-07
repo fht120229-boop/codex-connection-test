@@ -15,7 +15,7 @@ class PreprocessedImage:
     binary: np.ndarray
 
 
-def preprocess_image(image_path: str, max_side: int = 1600) -> PreprocessedImage:
+def preprocess_image(image_path: str, max_side: int = 1600, min_side: int = 900) -> PreprocessedImage:
     """Resize, grayscale, denoise and threshold an image for OCR.
 
     The original color image is retained for QR decoding and the binary image
@@ -26,9 +26,15 @@ def preprocess_image(image_path: str, max_side: int = 1600) -> PreprocessedImage
     if image is None:
         raise FileNotFoundError(f"cannot read image: {image_path}")
     height, width = image.shape[:2]
-    scale = min(1.0, float(max_side) / max(height, width))
-    if scale < 1.0:
-        image = cv2.resize(image, (round(width * scale), round(height * scale)), interpolation=cv2.INTER_AREA)
+    long_side = max(height, width)
+    if long_side < min_side:
+        # Small phone thumbnails benefit from a bounded upscale before OCR.
+        scale = min(2.0, float(max_side) / long_side)
+    else:
+        scale = min(1.0, float(max_side) / long_side)
+    if scale != 1.0:
+        interpolation = cv2.INTER_CUBIC if scale > 1.0 else cv2.INTER_AREA
+        image = cv2.resize(image, (round(width * scale), round(height * scale)), interpolation=interpolation)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     denoised = cv2.bilateralFilter(gray, 7, 50, 50)
     binary = cv2.adaptiveThreshold(
