@@ -45,4 +45,4 @@ python run_pipeline.py ./battery-nameplate.jpg
 - [OpenCV QRCodeDetector](https://docs.opencv.org/4.x/de/dc3/classcv_1_1QRCodeDetector.html)
 - [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp)
 
-YOLO、EasyOCR、PaddleOCR 和 zxing-cpp 的许可证及模型权重条款以各自上游仓库为准。本仓库只提供适配层，不复制上游模型或代码。
+Ultralytics YOLO 使用 AGPL-3.0；如果把 YOLO 服务或修改后的组件用于闭源商业产品，请先完成许可证评估。EasyOCR、PaddleOCR、zxing-cpp 和模型权重的条款也以各自上游仓库为准。本仓库只提供适配层，不复制上游模型或代码。
